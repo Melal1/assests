@@ -1,0 +1,12 @@
+--- login	2024-09-02 04:51:58.909989117 +0300
++++ login_new	2024-09-02 04:51:58.909989117 +0300
+@@ -2,6 +2,9 @@
+ 
+ auth       requisite    pam_nologin.so
+ auth       include      system-local-login
++auth       optional     pam_gnome_keyring.so
+ account    include      system-local-login
+ session    include      system-local-login
+ password   include      system-local-login
++session    optional     pam_gnome_keyring.so auto_start
++
