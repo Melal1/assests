@@ -1,0 +1,26 @@
+#!/bin/sh
+
+clock=$(date '+%I')
+
+case "$clock" in
+	"00") icon="󱑊" ;;
+	"01") icon="󱐿" ;;
+	"02") icon="󱑀" ;;
+	"03") icon="󱑁" ;;
+	"04") icon="󱑂" ;;
+	"05") icon="󱑃" ;;
+	"06") icon="󱑄" ;;
+	"07") icon="󱑅" ;;
+	"08") icon="󱑆" ;;
+	"09") icon="󱑇" ;;
+	"10") icon="󱑈" ;;
+	"11") icon="󱑉" ;;
+	"12") icon="󱑊" ;;
+esac
+
+case $BUTTON in
+	3) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+# date "+^c#FFFFFF^%b %d (%a) ^c#5F5F5F^$icon ^c#FFFFFF^%M%p "
+date "+| %b %d (%a) ^c#686868^${icon} ^c#FFFFFF^%I:%M%p"

@@ -1,0 +1,15 @@
+location=${1:-/}
+
+[ -d "$location" ] || exit
+
+case $BUTTON in
+	3) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+case "$location" in
+	"/home"* ) icon="󱂵" ;;
+	"/mnt"* ) icon="󰉉" ;;
+	*) icon="󰋊";;
+esac
+
+printf "%s %s\n" "^c#4E4E4E^${icon}" "^c#FFFFFF^$(df -h "$location" | awk ' /[0-9]/ {print $3 "/" $2}')"

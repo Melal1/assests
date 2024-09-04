@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Prints the current volume or 🔇 if muted.
+
+case $BUTTON in
+	1) wpctl set-volume @DEFAULT_SINK@ 1%+ ;;
+	4) wpctl set-mute @DEFAULT_SINK@ toggle ;;
+	3) wpctl set-volume @DEFAULT_SINK@ 1%- ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+vol="$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
+
+# If muted, print 🔇 and exit.
+[ "$vol" != "${vol%\[MUTED\]}" ] && echo " ^c#474747^  ^c#FFFFFF^0% |"&& exit
+
+vol="${vol#Volume: }"
+
+split() {
+	# For ommiting the . without calling and external program.
+	IFS=$2
+	set -- $1
+	printf '%s' "$@"
+}
+
+vol="$(printf "%.0f" "$(split "$vol" ".")")"
+
+case 1 in
+	$((vol >= 70)) ) icon="" ;;
+	$((vol >= 30)) ) icon="" ;;
+	$((vol >= 1)) ) icon="" ;;
+	* ) echo " ^c#474747^  ^c#FFFFFF^0% |" && exit ;;
+esac
+
+echo " ^c#474747^$icon  ^c#FFFFFF^$vol% |"
+

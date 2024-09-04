@@ -1,0 +1,8 @@
+#!/bin/bash
+
+case $BUTTON in
+	1) xdg-open "https://chatgpt.com" ;;
+	3) xdg-open "https://github.com/Melal1?tab=repositories" ;;
+esac
+
+echo " | ^c#6E6E6E^ "

@@ -1,5 +1,4 @@
-*.color1: #FDF5FF
-*.color2: #111111
-*.color3: #262626
-*.color4: #eeeeee
-
+dwm.color:  #FFFFFF
+dwm.color2: #000000
+dwm.color3: #262626&
+dwm.color4: #FF0000

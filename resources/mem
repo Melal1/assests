@@ -1,0 +1,6 @@
+#!/bin/bash
+case $BUTTON in
+	3) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+free --mebi | sed -n '2{p;q}' | awk '{printf (" ^c#616161^  ^c#FFFFFF^" "%2.2fG \n", ( $3 / 1024), ($2 / 1024))}'
+
