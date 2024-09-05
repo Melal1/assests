@@ -1,9 +1,40 @@
 #!/bin/bash 
 
+# Prompt user for input
+choice=$(echo -e "test1\ntest2" | dmenu -i -p "Change theme to:")
 
-# reload .Xresources 
-[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources
+# Exit if no choice is made
+if [[ -z "$choice" ]] ; then
+    exit 1
+fi
 
+# Define the path to the kitty configuration file
+kitty_conf="$HOME/.config/kitty/kitty.conf"
 
-# liverelaodxrdb function (dwm)
+# Update configuration file based on user choice
+case "$choice" in
+    test1)
+        if grep -q "^include ~/.config/kitty/test2.conf" "$kitty_conf"; then
+            sed -i 's|^include ~/.config/kitty/test2.conf|include ~/.config/kitty/test1.conf|' "$kitty_conf" && \
+            notify-send "Theme changed to test1"
+        else
+            notify-send "Error: test2.conf not included in $kitty_conf"
+        fi
+        ;;
+    test2)
+        if grep -q "^include ~/.config/kitty/test1.conf" "$kitty_conf"; then
+            sed -i 's|^include ~/.config/kitty/test1.conf|include ~/.config/kitty/test2.conf|' "$kitty_conf" && \
+            notify-send "Theme changed to test2"
+        else
+            notify-send "Error: test1.conf not included in $kitty_conf"
+        fi
+        ;;
+esac
+
+# Reload .Xresources if it exists
+if [[ -f ~/.Xresources ]]; then
+    xrdb -merge -I$HOME ~/.Xresources
+fi
+
+# Trigger the reload of dwm (assuming you are using dwm)
 xdotool key alt+Super_L+shift+F12
