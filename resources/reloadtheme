@@ -1,40 +1,73 @@
-#!/bin/bash 
+#!/bin/bash
 
-# Prompt user for input
-choice=$(echo -e "test1\ntest2" | dmenu -i -p "Change theme to:")
+choice=$(echo -e "Catppuccin\nDark" | dmenu -i -p "Change theme to:")
 
-# Exit if no choice is made
 if [[ -z "$choice" ]] ; then
     exit 1
 fi
 
-# Define the path to the kitty configuration file
 kitty_conf="$HOME/.config/kitty/kitty.conf"
+catppuccin_wall="$HOME/Pictures/Wallpapers/nice-blue-background.png"
+dark_wall="$HOME/Pictures/Wallpapers/firewatch-dark.jpg"
 
-# Update configuration file based on user choice
 case "$choice" in
-    test1)
-        if grep -q "^include ~/.config/kitty/test2.conf" "$kitty_conf"; then
-            sed -i 's|^include ~/.config/kitty/test2.conf|include ~/.config/kitty/test1.conf|' "$kitty_conf" && \
-            notify-send "Theme changed to test1"
-        else
-            notify-send "Error: test2.conf not included in $kitty_conf"
-        fi
+    "Catppuccin")
+        sed -i 's|^include ~/.config/kitty/[^ ]*|include ~/.config/kitty/mocha.conf|' "$kitty_conf"
+        notify-send "Theme changed to Catppuccin"
+        feh --bg-fill "$catppuccin_wall"
+        sed -i 's|^feh --bg-fill [^ ]*|feh --bg-fill "$catppuccin_wall" &|' "$HOME/.xinitrc"
+        cat << 'EOF' > ~/.Xresources
+dwm.color0: #1e1e2e
+dwm.color1: #6c7086
+dwm.color2: #cdd6f4
+dwm.color3: #cba6f7
+dwm.color4: #b4befe
+dwm.color5: #FFFFFF
+dwm.color6: #cdd6f4
+dwm.color7: #1e1e2e
+dwm.color8: #FF00AA
+
+dmenu.color1: #cdd6f4
+dmenu.color2: #1e1e2e
+dmenu.color3: #1e1e2e
+dmenu.color4: #cba6f7
+
+dmenu.font: Hack Nerd Font:style=bold:size=12
+EOF
         ;;
-    test2)
-        if grep -q "^include ~/.config/kitty/test1.conf" "$kitty_conf"; then
-            sed -i 's|^include ~/.config/kitty/test1.conf|include ~/.config/kitty/test2.conf|' "$kitty_conf" && \
-            notify-send "Theme changed to test2"
-        else
-            notify-send "Error: test1.conf not included in $kitty_conf"
-        fi
+    "Dark")
+        sed -i 's|^include ~/.config/kitty/[^ ]*|include ~/.config/kitty/dark.conf|' "$kitty_conf"
+        notify-send "Theme changed to Dark"
+        feh --bg-fill "$dark_wall"
+        sed -i 's|^feh --bg-fill [^ ]*|feh --bg-fill "$dark_wall" &|' "$HOME/.xinitrc"
+
+        cat << 'EOF' > ~/.Xresources
+dwm.color0: #1e1e2e
+dwm.color1: #6c7086
+dwm.color2: #cdd6f4
+dwm.color3: #cba6f7
+dwm.color4: #b4befe
+dwm.color5: #FFFFFF
+dwm.color6: #cdd6f4
+dwm.color7: #1e1e2e
+dwm.color8: #FF00AA
+
+dmenu.color1: #cdd6f4
+dmenu.color2: #1e1e2e
+dmenu.color3: #1e1e2e
+dmenu.color4: #cba6f7
+
+dmenu.font: Hack Nerd Font:style=bold:size=12
+EOF
+        ;;
+    *)
+        notify-send "Error: Invalid choice"
+        exit 1
         ;;
 esac
 
-# Reload .Xresources if it exists
 if [[ -f ~/.Xresources ]]; then
-    xrdb -merge -I$HOME ~/.Xresources
+    xrdb -merge ~/.Xresources
 fi
 
-# Trigger the reload of dwm (assuming you are using dwm)
 xdotool key alt+Super_L+shift+F12

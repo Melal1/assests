@@ -1,4 +1,5 @@
 #!/bin/bash
+source "$HOME/.local/bin/themes.conf"
 
  case $BUTTON in
  	3) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
@@ -13,11 +14,10 @@ cpu1=$(grep 'cpu ' /proc/stat)
 sleep 0.1
 cpu2=$(grep 'cpu ' /proc/stat)
 
-# Calculate CPU usage and store it in the variable 'cpuusage'
-cpuusage=$(awk -v c1="$cpu1" -v c2="$cpu2" '
+cpuusage=$(awk -v cp1="$cpu1" -v cp2="$cpu2" '
 BEGIN {
-  split(c1, a, " ");
-  split(c2, b, " ");
+  split(cp1, a, " ");
+  split(cp2, b, " ");
   u1 = a[2] + a[4];
   t1 = a[2] + a[4] + a[5];
   u2 = b[2] + b[4];
@@ -30,5 +30,20 @@ BEGIN {
   print usage;
 }')
 
-# Echo the result with a '%' sign appended
-echo "^c#5A5A5A^ ^c#FFFFFF^$cpuusage %"
+color_low="^c$c8^"     
+color_medium="^c$c5^"  
+color_high="^c$c6^"    
+
+if [ "$(echo "$cpuusage < 30" | bc)" -eq 1 ]; then
+    color="$color_low"
+elif [ "$(echo "$cpuusage >= 30 && $cpuusage < 80" | bc)" -eq 1 ]; then
+    color="$color_medium"
+elif [ "$(echo "$cpuusage >= 80" | bc)" -eq 1 ]; then
+    color="$color_high"
+else
+    color="$color_low" # Default color to handle invalid $cpuusage output. This prevents crashes in dwmblocks and, consequently, dwm itself due to invalid color codes (^c^).
+
+fi
+
+echo "^c$c4^ ${color}$cpuusage%"
+

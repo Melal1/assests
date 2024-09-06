@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source "$HOME/.local/bin/themes.conf"
 if [[ "$BUTTON" == "1" ]]; then
     choice=$(echo -e "Github\nChatgpt\nYoutube" | dmenu -p "What website do you want to open : ")
 
@@ -24,7 +24,7 @@ if [[ "$BUTTON" == "1" ]]; then
 
 fi
 
-echo " | ^c#6E6E6E^ "
+echo "^c$c0^ | ^c$c3^  "
 
 
 

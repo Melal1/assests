@@ -1,11 +1,13 @@
 #!/bin/bash
-location=${1:-/}
-
-[ -d "$location" ] || exit
+source "$HOME/.local/bin/themes.conf"
 
 case $BUTTON in
 	3) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
+
+location=${1:-/}
+
+[ -d "$location" ] || exit
 
 case "$location" in
 	"/home"* ) icon="󱂵" ;;
@@ -13,4 +15,9 @@ case "$location" in
 	*) icon="󰋊";;
 esac
 
-printf "%s %s\n" "^c#4E4E4E^${icon}" "^c#FFFFFF^$(df -h "$location" | awk ' /[0-9]/ {print $3 "/" $2}')"
+
+
+disk_usage=$(df -h "$location" | awk '/[0-9]/ {print $3}' | sed 's/G//')
+disk_size=$(df -h "$location" | awk ' /[0-9]/ {print $2}')
+
+echo "^c$c7^${icon} ^c$c0^${disk_usage}^c$c8^/${disk_size}"

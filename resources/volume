@@ -1,4 +1,5 @@
 #!/bin/bash
+source "$HOME/.local/bin/themes.conf"
 
 # Prints the current volume or 🔇 if muted.
 
@@ -12,7 +13,7 @@ esac
 vol="$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
 
 # If muted, print 🔇 and exit.
-[ "$vol" != "${vol%\[MUTED\]}" ] && echo " ^c#474747^  ^c#FFFFFF^0% |"&& exit
+[ "$vol" != "${vol%\[MUTED\]}" ] && echo " ^c$c6^  ^c$c0^0% |"&& exit
 
 vol="${vol#Volume: }"
 
@@ -29,8 +30,8 @@ case 1 in
 	$((vol >= 70)) ) icon="" ;;
 	$((vol >= 30)) ) icon="" ;;
 	$((vol >= 1)) ) icon="" ;;
-	* ) echo " ^c#474747^  ^c#FFFFFF^0% |" && exit ;;
+	* ) echo " ^c$c6^  ^c$c0^0% |" && exit ;;
 esac
 
-echo " ^c#474747^$icon  ^c#FFFFFF^$vol% |"
+echo " ^c$c10^$icon  ^c$c0^$vol% |"
 

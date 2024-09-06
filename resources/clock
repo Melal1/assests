@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source "$HOME/.local/bin/themes.conf"
 clock=$(date '+%I')
 
 case "$clock" in
@@ -22,5 +22,5 @@ case $BUTTON in
 	3) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
-# date "+^c#FFFFFF^%b %d (%a) ^c#5F5F5F^$icon ^c#FFFFFF^%M%p "
-date "+| %b %d (%a) ^c#686868^${icon} ^c#FFFFFF^%I:%M%p"
+date "+^c$c0^| ^c$c8^%b %d ^c$c1^%a ^c$c2^$icon ^c$c8^'%I:%M'%p"
+

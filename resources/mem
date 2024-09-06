@@ -1,6 +1,46 @@
 #!/bin/bash
+source "$HOME/.local/bin/themes.conf"
+
 case $BUTTON in
 	3) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
-free --mebi | sed -n '2{p;q}' | awk '{printf (" ^c#616161^  ^c#FFFFFF^" "%2.2fG \n", ( $3 / 1024), ($2 / 1024))}'
+# free --mebi | sed -n '2{p;q}' | awk '{printf (" ^c#616161^  ^c#FFFFFF^" "%2.2fG \n", ( $3 / 1024), ($2 / 1024))}'
+#
+
+while IFS=":" read -r a b; do
+                case $a in
+                    "MemTotal") ((mem_used+=${b/kB})); mem_total="${b/kB}" ;;
+                    "Shmem") ((mem_used+=${b/kB}))  ;;
+                    "MemFree" | "Buffers" | "Cached" | "SReclaimable")
+                        mem_used="$((mem_used-=${b/kB}))"
+                    ;;
+                esac
+done < /proc/meminfo
+
+# Use bc for detailed output
+resultus=$(echo "scale=2; $mem_used / 1048576" | bc)
+
+resultus2=$(echo "scale=2; $mem_total / 1048576" | bc)
+
+color_low="^c$c8^"     
+color_medium="^$c5^"  
+color_high="^c$c6^"    
+
+if [ "$(echo "$resultus < 10" | bc)" -eq 1 ]; then
+    color="$color_low"
+elif [ "$(echo "$resultus >= 10 && $resultus < 25" | bc)" -eq 1 ]; then
+    color="$color_medium"
+elif [ "$(echo "$resultus >= 25" | bc)" -eq 1 ]; then
+    color="$color_high"
+else
+    color="$color_low" # Default color to handle invalid $resultus output. This prevents crashes in dwmblocks and, consequently, dwm itself due to invalid color codes (^c^).
+
+fi
+
+
+echo " ^c$c9^  $color${resultus}G "
+
+
+
+
 
